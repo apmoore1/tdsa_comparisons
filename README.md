@@ -60,8 +60,15 @@ The metadata from the results contain the following keys:
     * `Model` -- The name of the TDSA model used. Valid names that can appear are the following: `AE`, `TDLSTM`, and `IAN`
 
 Example of this metadata is shown below:
-``` json
-{"name": "Laptop", "split": "Test", "predicted_target_sentiment_key": {"predicted_target_sentiment_IAN_GloVe_None_None": {"CWR": false, "Position": false, "Inter-Aspect": false, "Model": "IAN"}}}
+```json
+{"name": "Laptop", 
+ "split": "Test", 
+ "predicted_target_sentiment_key": 
+   {"predicted_target_sentiment_IAN_GloVe_None_None": 
+      {"CWR": false, "Position": false, 
+      "Inter-Aspect": false, "Model": "IAN"}
+   }
+}
 ```
 
 
