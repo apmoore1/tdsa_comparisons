@@ -50,6 +50,20 @@ To create the anonymised results run the following python script, which takes th
 python anonymise_dataset_folder.py ./data ./saved_results
 ```
 
+The metadata from the results contain the following keys:
+1. `name` -- Name of the dataset in this case this is either `Laptop`, `Restaurant`, or `Election`
+2. `split` -- The dataset split this is either `Validation` or `Test`
+3. `predicted_target_sentiment_key` -- This contains a dictionary of dictionaries where each dictionary key links to a predicted sentiment key in each sample e.g. `predicted_target_sentiment_IAN_GloVe_None_None` this key then has a dictionary as value describing the model that generated those predictions. This dictionary has the following keys:
+    * `CWR` -- If the model used Contextualised Word Representations, if False then GloVe vectors were used.
+    * `Inter-Aspect` -- Whether the model toke into account inter aspect/target modelling if so then the name of this modelling would be the value else `False`. The valid names are the following `sequential` for [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) LSTM method.
+    * `Position` -- Whether or not target position weighting or embedding were used if not this would be `False`. The valid names that can appear here are `Weighting` or `Embedding`
+    * `Model` -- The name of the TDSA model used. Valid names that can appear are the following: `AE`, `TDLSTM`, and `IAN`
+
+Example of this metadata is shown below:
+``` json
+{"name": "Laptop", "split": "Test", "predicted_target_sentiment_key": {"predicted_target_sentiment_IAN_GloVe_None_None": {"CWR": false, "Position": false, "Inter-Aspect": false, "Model": "IAN"}}}
+```
+
 
 
 
