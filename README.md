@@ -33,6 +33,20 @@ The 4 main experiments are the following:
 
 All of the default training configurations for each of the 3 models can be found [here](./resources/model_configs/).
 
+### Baseline Text classification experiments
+Before performing all of the experiments on the Target based models we want to set a benchmark on these datasets using standard text classification models that have no knowledge of the target. In these experiments we have one CNN based model from [Kim 2014](https://arxiv.org/pdf/1408.5882.pdf) which takes as input word embeddings and then passes those through 3 filters (3, 4, and 5 window filter) each with a filter map of 100. This model is going to have two versions:
+1. Trained on all of the sentences from the TDSA datasets where the sentiment for sentences with multiple targets and sentiments is going to be associated with the most frequent sentiment (ties decided by random choice).
+2. Trained on only sentences from the TDSA datasets where the sentence has only one sentiment associated with it.
+
+The two versions from now on will be called *CNN(avg)* and *CNN(single)* respectively. The metadata associated from the results of these baselines will be the same as those from the Target based methods, of which the metadata is described in the [results section](#results). The only extra metadata add for these experiments is the following within the `predicted_target_sentiment_key` dictionary: `data-trained-on` which can only have two values `single` and `average` this is to represent the two different model versions *CNN(single)* and *CNN(avg)*.
+
+Before training these two model versions we need to create two new training datasets based on the different sentiment labels (single and average). To do this easily we create a new data directories for each of the datasets (Election, Restaurant, and Laptop). Of which these data directories can be found in `./data/text_classification/single` and `./data/text_classification/average` for the the single and average sentiment labels respectively. To create these data directories run the following bash script:
+``` bash
+./tdsa_comparisons/splitting_data/text_classification_dataset_creator.sh
+```
+
+This bash script if ran multiple times will not change the data but will provide you with the data statistics for the training datasets text sentiment label.
+
 ### Baseline Experiments
 
 {'metadata':{'predictions':{'target_sentiment_{word_vector}_{position}_{}}}
