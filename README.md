@@ -40,12 +40,12 @@ Before performing all of the experiments on the Target based models we want to s
 
 The two versions from now on will be called *CNN(avg)* and *CNN(single)* respectively. The metadata associated from the results of these baselines will be the same as those from the Target based methods, of which the metadata is described in the [results section](#results). The only extra metadata add for these experiments is the following within the `predicted_target_sentiment_key` dictionary: `data-trained-on` which can only have two values `single` and `average` this is to represent the two different model versions *CNN(single)* and *CNN(avg)*.
 
-Before training these two model versions we need to create two new training datasets based on the different sentiment labels (single and average). To do this easily we create a new data directories for each of the datasets (Election, Restaurant, and Laptop). Of which these data directories can be found in `./data/text_classification/single` and `./data/text_classification/average` for the the single and average sentiment labels respectively. To create these data directories run the following bash script:
+Before training these two model versions we need to create two new training and validation datasets based on the different sentiment labels (single and average). To do this easily we create new data directories for each of the datasets (Election, Restaurant, and Laptop). Of which these data directories can be found in `./data/text_classification/single` and `./data/text_classification/average` for the single and average sentiment labels respectively. To create these data directories run the following bash script:
 ``` bash
 ./tdsa_comparisons/splitting_data/text_classification_dataset_creator.sh
 ```
 
-This bash script if ran multiple times will not change the data but will provide you with the data statistics for the training datasets text sentiment label.
+This bash script if ran multiple times will not change the data but will provide you with the data statistics for the training and validation datasets text sentiment label. The main difference with these dataset directories is that they will have an extra validation dataset called `train_val.json` which will be used for early stopping for the text classification models. However when predicting for the TDSA task this will be done like all of the other experiments on the `val.json` and `test.json` data
 
 ### Baseline Experiments
 
