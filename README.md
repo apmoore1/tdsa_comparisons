@@ -17,54 +17,117 @@ The Election, Laptop, and Restaurant dataset splits can be found in there respec
 ## Word Embeddings
 For all of the experiments the [840 billion token 300 dimension GloVe word vectors](https://nlp.stanford.edu/projects/glove/) will be used, these word vectors are stored within the `resources` directory under `./resources/embeddings/glove.840B.300d.txt`. The only time these word vectors will not be used is during the Contextualised Word Representation (CWR) experiments where the CWR will be used instead.
 
-The CWR that are Transformer ELMo models are stored in the directory `./resources/CWR/`, of which each dataset has their own CWR due to domain specific CWR being shown to outperform non-domain specific CWR by a large margin.
+The CWR that are Transformer ELMo models are stored in the directory `./resources/CWR/`, of which each dataset has their own CWR due to [Rietzler et al. 2019](https://arxiv.org/abs/1908.11860) showing that domain specific CWR outperform non-domain specific CWR by a large margin.
 
 ## Experiments
-In all of the experiments we are going to use the following 3 models:
-1. **TDLSTM**
-2. **IAN**
-3. **InterAE** (model from [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/)) -- The baseline version of this is without the Inter-Aspect LSTM which is the AE model from [Wang et al. 2016](https://www.aclweb.org/anthology/D16-1058.pdf) with attention applied after the sentence LSTM. Each time we refer to this model's baseline version it will be called **AE**.
+In all of the experiments we are going to use the following 3 TDSA models:
+1. [**TDLSTM**](https://www.aclweb.org/anthology/C16-1311.pdf)
+2. [**IAN**](https://www.ijcai.org/proceedings/2017/0568.pdf)
+3. **AE** (in the thesis/paper it is called *AE-Attention*) -- A model that is the same as the *AE* model from [Wang et al. 2016](https://www.aclweb.org/anthology/D16-1058.pdf) but with an attention layer after the LSTM enocder. This model is also the same as the inter-aspect model (from now on called **Inter-AE**) from [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) but without the LSTM aspect encoder (phase 2 in figure 1) that models other targets from the same context/text.
 
 The 4 main experiments are the following:
-1. Baseline -- TDLSTM, IAN, and AE as is without modification using the GloVe word vectors.
-2. Inter-Aspect -- TDLSTM, IAN, and InterAE with Inter-Aspect modelling. To incorporate Inter Aspect modeling we will adopt the method of [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) which uses an LSTM.
+1. Baseline -- TDLSTM, IAN, and AE as is without modification using the GloVe word vectors. Also included in these experiments is a baseline CNN text classifier which does not take into account the target.   
+2. Inter-Aspect -- TDLSTM, IAN, and InterAE with Inter-Aspect modelling. To incorporate Inter Aspect modeling we will adopt the method of [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) which uses an LSTM hence why the AE model is now called the InterAE model.
 3. Position -- Run the IAN, and AE models with position of the target encoded. TDLSTM is not used in this experiment as the model already encodes position information via the network architecture.
 4. CWR -- Replace the GloVe vectors with domain specific CWR for TDLSTM, IAN, and AE.
 
 All of the default training configurations for each of the 3 models can be found [here](./resources/model_configs/).
+
+Furthermore all the experiments ran within the experiment section all use bash scripts of which these scripts all take two arguments:
+1. The number of times to run each model. In all of experiments this is `8`
+2. The directory to store a saved model of each model ran on each dataset.
 
 ### Baseline Text classification experiments
 Before performing all of the experiments on the Target based models we want to set a benchmark on these datasets using standard text classification models that have no knowledge of the target. In these experiments we have one CNN based model from [Kim 2014](https://arxiv.org/pdf/1408.5882.pdf) which takes as input word embeddings and then passes those through 3 filters (3, 4, and 5 window filter) each with a filter map of 100. This model is going to have two versions:
 1. Trained on all of the sentences from the TDSA datasets where the sentiment for sentences with multiple targets and sentiments is going to be associated with the most frequent sentiment (ties decided by random choice).
 2. Trained on only sentences from the TDSA datasets where the sentence has only one sentiment associated with it.
 
-The two versions from now on will be called *CNN(avg)* and *CNN(single)* respectively. The metadata associated from the results of these baselines will be the same as those from the Target based methods, of which the metadata is described in the [results section](#results). The only extra metadata add for these experiments is the following within the `predicted_target_sentiment_key` dictionary: `data-trained-on` which can only have two values `single` and `average` this is to represent the two different model versions *CNN(single)* and *CNN(avg)*.
+The two versions from now on will be called *CNN(average)* and *CNN(single)* respectively. The metadata associated from the results of these baselines will be the same as those from the Target based methods, of which the metadata is described in the [results section](#anonymise-the-results). The only extra metadata add for these experiments is the following within the `predicted_target_sentiment_key` dictionary: `data-trained-on` which can only have two values `single` and `average` this is to represent the two different model versions *CNN(single)* and *CNN(average)*.
 
 Before training these two model versions we need to create two new training and validation datasets based on the different sentiment labels (single and average). To do this easily we create new data directories for each of the datasets (Election, Restaurant, and Laptop). Of which these data directories can be found in `./data/text_classification/single` and `./data/text_classification/average` for the single and average sentiment labels respectively. To create these data directories run the following bash script:
 ``` bash
 ./tdsa_comparisons/splitting_data/text_classification_dataset_creator.sh
 ```
 
-This bash script if ran multiple times will not change the data but will provide you with the data statistics for the training and validation datasets text sentiment label. The main difference with these dataset directories is that they will have an extra validation dataset called `train_val.json` which will be used for early stopping for the text classification models. However when predicting for the TDSA task this will be done like all of the other experiments on the `val.json` and `test.json` data
+This bash script if ran multiple times will not change the data but will provide you with the data statistics for the training and validation datasets text sentiment label. These dataset statistics are better shown for the training dataset through this [notebook](./analysis/Baseline_non_target_results.ipynb). The main difference with these dataset directories is that they will have an extra validation dataset called `train_val.json` which will be used for early stopping for the text classification models. However when predicting for the TDSA task this will be done like all of the other experiments on the `val.json` and `test.json` TDSA data. 
+
+Run the following bash script to re-create the CNN text classification experiments: 
+
+``` bash
+./tdsa_comparisons/experiments/non_target_baseline.sh 8 ./saved_models/
+```
+
+The results from the CNN text classification can be seen through the associated [notebook](./analysis/Baseline_non_target_results.ipynb) of which it was found that the *CNN (average)* was better on 2 (3) of the 3 datasets for the accuracy (macro f1) metric across both validation and test splits. Thus the *CNN (average)* will be used as the baseline to compare against the TDSA methods.
 
 ### Baseline Experiments
+
+To run all 3 TDSA methods for the baseline experiments on the 3 datasets run the following bash script:
+
+``` bash
+./tdsa_comparisons/experiments/baseline.sh 8 ./saved_models/
+```
+
+### Inter-Aspect Experiments
+
+To run all 3 TDSA methods for the inter-aspect experiments on the 3 datasets run the following bash script:
+
+``` bash
+./tdsa_comparisons/experiments/sequential_inter_aspect.sh 8 ./saved_models/
+```
+
+### Position Embedding Experiments
+
+To run the 2 TDSA methods for the position embedding experiments on the 3 datasets run the following:
+
+``` bash
+./tdsa_comparisons/experiments/position_embeddings.sh 8 ./saved_models/
+```
+
+### CWR Experiments
+
+To run the 3 TDSA methods for the CWR experiments on the 3 datasets run the following:
+``` bash
+./tdsa_comparisons/experiments/cwr.sh 8 ./saved_models/
+```
 
 {'metadata':{'predictions':{'target_sentiment_{word_vector}_{position}_{}}}
 
 ## Results
-All of the results which have been some what anonymised (`text` data from the dataset is removed) from these models are released in `JSON` format nearly identical to there original format but without the `text` as the SemEval dataset do not allow re-distribution of the data. The results from all of the experiments can be found in the following folders:
-1. [`./saved_results/restaurant`](./saved_results/restaurant)
-2. [`./saved_results/laptop`](./saved_results/laptop)
-3. [`./saved_results/election`](./saved_results/election)
+In the results section the predictions generated from all of the experiments are examined through their respective notebooks which can be found in the [analysis folder.](./analysis). The predictions from the experiments are saved to the original data within the data folder (./data) and is then released annoymised (no text) within this github repository in the [saved results folder.](./saved_results) 
 
-Where each folder contains a `test.json` and `val.json` files that represent the test and validation results for the associated dataset.
+Thus before any analysis is performed we first annoymise the results so the analysis can be performed.
 
-To create the anonymised results run the following python script, which takes the results and other data from the associated dataset folders within `./data` and stores them in the `./saved_results` folder in the correct format:
+### Anonymise the results
+All of the results which have been some what anonymised (`text` data from the dataset is removed) from these models are released in `JSON` format nearly identical to there original format. The results from all of the experiments can be found in the following folders for the Target Based and best performing non-target baseline:
+1. [`./saved_results/main/restaurant`](./saved_results/main/restaurant)
+2. [`./saved_results/main/laptop`](./saved_results/main/laptop)
+3. [`./saved_results/main/election`](./saved_results/main/election)
+
+For the results between the two CNN version non-target baselines (*CNN(single)* and *CNN(average)*) they can be found within the following two folders both containing additional sub-folders for each dataset:
+1. [`./saved_results/non_target_baselines/single`](./saved_results/non_target_baselines/single)
+2. [`./saved_results/non_target_baselines/average`](./saved_results/non_target_baselines/average)
+
+Where each dataset folder contains a `test.json`, `val.json`, and `train.json` files that represent the test and validation results for the associated dataset, as well as the training dataset so that error analysis can be performed.
+
+Before the anonymisation we want to merge the results from the best performing CNN text classifier (*CNN (average)*) with the baseline results. This is done so that the analysis is easier. To do this run the following script before the anonymisation:
 ``` bash
-python anonymise_dataset_folder.py ./data ./saved_results
+python merge_text_and_tdsa_results.py ./data/text_classification/average ./data
 ```
 
-The metadata from the results contain the following keys:
+
+To create the anonymised results for the Target Based and best performing non-target baselines run the following:
+``` bash
+python anonymise_dataset_folder.py ./data ./saved_results/main
+```
+
+To create the anonymised results for the CNN version non-target baselines run the following:
+``` bash
+python anonymise_dataset_folder.py ./data/text_classification/single ./saved_results/non_target_baselines/single
+python anonymise_dataset_folder.py ./data/text_classification/average ./saved_results/non_target_baselines/average
+```
+
+### Result Metadata
+Each `.json` result file contain metadata which is stored on the last line of the `.json` file of which the metadata contains the following keys:
 1. `name` -- Name of the dataset in this case this is either `Laptop`, `Restaurant`, or `Election`
 2. `split` -- The dataset split this is either `Validation` or `Test`
 3. `predicted_target_sentiment_key` -- This contains a dictionary of dictionaries where each dictionary key links to a predicted sentiment key in each sample e.g. `predicted_target_sentiment_IAN_GloVe_None_None` this key then has a dictionary as value describing the model that generated those predictions. This dictionary has the following keys:
