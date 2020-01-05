@@ -22,7 +22,7 @@ if __name__ == '__main__':
     save_dir.mkdir(parents=True, exist_ok=True)
 
     dataset_names = ['election', 'laptop', 'restaurant']
-    split_names = ['val', 'test']
+    split_names = ['train', 'val', 'test']
     for dataset_name in dataset_names:
         dataset_result_folder = Path(results_dir, f'{dataset_name}_dataset')
         save_dataset_folder = Path(save_dir, f'{dataset_name}_dataset')
