@@ -2,12 +2,20 @@ import argparse
 from collections import Counter
 from pathlib import Path
 from typing import Optional, Dict
+import re
 
 from target_extraction.data_types import TargetTextCollection
 
 def parse_path(path_string: str) -> Path:
     path_string = Path(path_string).resolve()
     return path_string
+
+def remove_existing_predictions(dataset: TargetTextCollection):
+    for target_text in dataset.values():
+        all_keys = list(target_text.keys())
+        for key in all_keys:
+            if re.search(r'predicte\w*', key):
+                del target_text[key]
 
 def get_target_sentiment_distribution(dataset: TargetTextCollection) -> Dict[str, float]:
     target_sentiment_distribution = Counter()
@@ -87,6 +95,7 @@ if __name__=='__main__':
             dataset = remove_multi_sentiment_targets(dataset)
         
         if save_dir:
+            remove_existing_predictions(dataset)
             save_dir.mkdir(parents=True, exist_ok=True)
             save_fp = Path(save_dir, f'{split_name}.json')
             dataset.to_json_file(save_fp)
