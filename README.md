@@ -95,7 +95,7 @@ To run the 3 TDSA methods for the CWR experiments on the 3 datasets run the foll
 ## Results
 In the results section the predictions generated from all of the experiments are examined through their respective notebooks which can be found in the [analysis folder.](./analysis). The predictions from the experiments are saved to the original data within the data folder (./data) and is then released annoymised (no text) within this github repository in the [saved results folder.](./saved_results) 
 
-Thus before any analysis is performed we first annoymise the results so the analysis can be performed.
+Thus before any analysis is performed we first annoymise the results so the analysis can be performed, we then explain how the predictions are stored and the metadata, and lastly we state which notebooks show what analysis.
 
 ### Anonymise the results
 All of the results which have been some what anonymised (`text` data from the dataset is removed) from these models are released in `JSON` format nearly identical to there original format. The results from all of the experiments can be found in the following folders for the Target Based and best performing non-target baseline:
@@ -126,12 +126,12 @@ python anonymise_dataset_folder.py ./data/text_classification/single ./saved_res
 python anonymise_dataset_folder.py ./data/text_classification/average ./saved_results/non_target_baselines/average
 ```
 
-### Result Metadata
-Each `.json` result file contain metadata which is stored on the last line of the `.json` file of which the metadata contains the following keys:
+### Result/Prediction Data and Metadata
+Each validation and test `.json` result file (this is for all data within `./saved_results` and `./data`) contain metadata which is stored on the last line of the `.json` file of which the metadata contains the following keys:
 1. `name` -- Name of the dataset in this case this is either `Laptop`, `Restaurant`, or `Election`
 2. `split` -- The dataset split this is either `Validation` or `Test`
 3. `predicted_target_sentiment_key` -- This contains a dictionary of dictionaries where each dictionary key links to a predicted sentiment key in each sample e.g. `predicted_target_sentiment_IAN_GloVe_None_None` this key then has a dictionary as value describing the model that generated those predictions. This dictionary has the following keys:
-    * `CWR` -- If the model used Contextualised Word Representations, if False then GloVe vectors were used.
+    * `CWR` -- If the model used Contextualised Word Representations, if `False` then GloVe vectors were used.
     * `Inter-Aspect` -- Whether the model toke into account inter aspect/target modelling if so then the name of this modelling would be the value else `False`. The valid names are the following `sequential` for [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) LSTM method.
     * `Position` -- Whether or not target position weighting or embedding were used if not this would be `False`. The valid names that can appear here are `Weighting` or `Embedding`
     * `Model` -- The name of the TDSA model used. Valid names that can appear are the following: `AE`, `TDLSTM`, and `IAN`
@@ -148,7 +148,21 @@ Example of this metadata is shown below:
 }
 ```
 
+The metadata requires you to know the prediction key to find the associated metadata. The prediction keys do have a structure which is the following:
+``` 
+predicted_target_sentiment_$ Model Name $_$ Word Representation $_$ Position Encoding $_$ Inter Aspect Encoding $
+``` 
 
+Where the values within the dollar signs can be the following:
+1. Model Name -- `IAN`, `AE`, `TDLSTM`, `CNN`
+2. Word Representation -- `CWR` or `GloVe`.
+3. Position Encoding -- `None`, `Weighted`, or `Embedding`. Where None represents no position encoding. 
+4. Inter Aspect Encoding -- `None`, or `sequential`. Where None represents no inter aspect encoding.
+
+Thus the following prediction key is for an `IAN` model that has been trained with GloVe and no position or inter apsect encodings: `predicted_target_sentiment_IAN_GloVe_None_None`
+
+### Baseline Results
+The following notebook shows the Baseline results
 
 
 
