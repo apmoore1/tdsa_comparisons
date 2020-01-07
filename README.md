@@ -38,7 +38,7 @@ Furthermore all the experiments ran within the experiment section all use bash s
 2. The directory to store a saved model of each model ran on each dataset.
 
 ### Baseline Text classification experiments
-Before performing all of the experiments on the Target based models we want to set a benchmark on these datasets using standard text classification models that have no knowledge of the target. In these experiments we have one CNN based model from [Kim 2014](https://arxiv.org/pdf/1408.5882.pdf) which takes as input word embeddings and then passes those through 3 filters (3, 4, and 5 window filter) each with a filter map of 100. This model is going to have two versions:
+Before performing all of the experiments on the Target based models we want to set a benchmark on these datasets using standard text classification models that have no knowledge of the target. In these experiments we have one CNN based model from [Kim 2014](https://www.aclweb.org/anthology/D14-1181/) which takes as input word embeddings and then passes those through 3 filters (3, 4, and 5 window filter) each with a filter map of 100. This model is going to have two versions:
 1. Trained on all of the sentences from the TDSA datasets where the sentiment for sentences with multiple targets and sentiments is going to be associated with the most frequent sentiment (ties decided by random choice).
 2. Trained on only sentences from the TDSA datasets where the sentence has only one sentiment associated with it.
 
@@ -90,6 +90,11 @@ To run the 3 TDSA methods for the CWR experiments on the 3 datasets run the foll
 ./tdsa_comparisons/experiments/cwr.sh 8 ./saved_models/
 ```
 
+We also ran the *CNN (average)* model with CWR to see the difference between the TDSA and Text classification methods when CWR are used. To run the *CNN* model:
+``` bash
+./tdsa_comparisons/experiments/non_target_cwr_baseline.sh 8 ./saved_models/
+```
+The results are saved to their own directory `./data/text_classification/average`, later we show how to merge these results with the TDSA results.
 {'metadata':{'predictions':{'target_sentiment_{word_vector}_{position}_{}}}
 
 ## Results
@@ -109,7 +114,7 @@ For the results between the two CNN version non-target baselines (*CNN(single)* 
 
 Where each dataset folder contains a `test.json`, `val.json`, and `train.json` files that represent the test and validation results for the associated dataset, as well as the training dataset so that error analysis can be performed.
 
-Before the anonymisation we want to merge the results from the best performing CNN text classifier (*CNN (average)*) with the baseline results. This is done so that the analysis is easier. To do this run the following script before the anonymisation:
+Before the anonymisation we want to merge the results from the best performing CNN text classifier (*CNN (average)*) and the *CNN* using CWR with the TDSA results. This is done so that the analysis is easier. To do this run the following script before the anonymisation:
 ``` bash
 python merge_text_and_tdsa_results.py ./data/text_classification/average ./data
 ```

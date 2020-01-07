@@ -1,3 +1,4 @@
+from collections import defaultdict
 import argparse
 from pathlib import Path
 
@@ -36,6 +37,10 @@ if __name__ == '__main__':
 
     dataset_names = ['election', 'laptop', 'restaurant']
     split_names = ['val', 'test']
+    prediction_keys_to_copy = ['predicted_target_sentiment_average_GloVe', 
+                               'predicted_target_sentiment_average_CWR']
+    prediction_key_rename = {'predicted_target_sentiment_average_GloVe': 'predicted_target_sentiment_CNN_GloVe_None_None',
+                             'predicted_target_sentiment_average_CWR': 'predicted_target_sentiment_CNN_CWR_None_None'}
     for dataset_name in dataset_names:
         new_dataset_result_folder = Path(new_data_dir, f'{dataset_name}_dataset')
         existing_dataset_result_folder = Path(existing_data_dir, f'{dataset_name}_dataset')
@@ -46,12 +51,11 @@ if __name__ == '__main__':
             exist_split_data = Path(existing_dataset_result_folder, f'{split_name}.json')
             exist_target_collection = TargetTextCollection.load_json(exist_split_data)
 
-            id_results = {}
+            id_results = defaultdict(dict)
             for text_id, target_text in new_target_collection.items():
-                cnn_result = target_text['predicted_target_sentiment_average_GloVe']
-                id_results[text_id] = cnn_result
-            related_metadata = new_target_collection.metadata['predicted_target_sentiment_key']['predicted_target_sentiment_average_GloVe']
-            del related_metadata['data-trained-on']
+                for prediction_key in prediction_keys_to_copy:
+                    cnn_result = target_text[prediction_key]
+                    id_results[text_id][prediction_key] = cnn_result
 
             len_err = ('The number of keys that the merge predictions are'
                        f' associated with {len(id_results)} are not the same '
@@ -59,7 +63,14 @@ if __name__ == '__main__':
                        f'contains {len(exist_target_collection)}.')
             assert len(id_results) == len(exist_target_collection), len_err
 
-            for text_id, cnn_predictions in id_results.items():
-                exist_target_collection[text_id]['predicted_target_sentiment_CNN_GloVe_None_None'] = cnn_predictions
-            exist_target_collection.metadata['predicted_target_sentiment_key']['predicted_target_sentiment_CNN_GloVe_None_None'] = related_metadata
+            for text_id, key_cnn_predictions in id_results.items():
+                for prediction_key, cnn_predictions in key_cnn_predictions.items():
+                    new_key_name = prediction_key_rename[prediction_key]
+                    exist_target_collection[text_id][new_key_name] = cnn_predictions
+            
+            for prediction_key in prediction_keys_to_copy:
+                related_metadata = new_target_collection.metadata['predicted_target_sentiment_key'][prediction_key]
+                del related_metadata['data-trained-on']
+                new_key_name = prediction_key_rename[prediction_key]
+                exist_target_collection.metadata['predicted_target_sentiment_key'][new_key_name] = related_metadata
             exist_target_collection.to_json_file(exist_split_data, include_metadata=True)
