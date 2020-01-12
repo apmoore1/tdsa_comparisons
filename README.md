@@ -83,6 +83,13 @@ To run the 2 TDSA methods for the position embedding experiments on the 3 datase
 ./tdsa_comparisons/experiments/position_embeddings.sh 8 ./saved_models/
 ```
 
+### Position Weighting and Inter-Aspect Experiments
+To run the 2 TDSA methods for the position embedding experiments on the 3 datasets run the following:
+
+``` bash
+./tdsa_comparisons/experiments/sequential_inter_aspect_and_position_weighting.sh 8 ./saved_models/
+```
+
 ### CWR Experiments
 
 To run the 3 TDSA methods for the CWR experiments on the 3 datasets run the following:
