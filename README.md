@@ -173,6 +173,13 @@ Where the values within the dollar signs can be the following:
 
 Thus the following prediction key is for an `IAN` model that has been trained with GloVe and no position or inter apsect encodings: `predicted_target_sentiment_IAN_GloVe_None_None`
 
+### Generating the Metric results
+For all of the experiments apart from those between the two versions of the `CNN` models we generate the metric results into a `TSV` file so that they can be better analysed. To generate these metric results which include results for all of the Error splits and their associated subsets run the following script:
+``` bash
+python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/results.tsv
+```
+Which gathers all of the results from the all of the dataset results in `./saved_results/main/` and generates the metric scores and saves them in a `TSV` file which will be stored at [`./saved_results/main/results.tsv`](./saved_results/main/results.tsv).
+
 ### Baseline Results
 The following notebook shows the Baseline results
 
