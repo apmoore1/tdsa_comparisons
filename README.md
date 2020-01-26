@@ -180,6 +180,11 @@ python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/r
 ```
 Which gathers all of the results from the all of the dataset results in `./saved_results/main/` and generates the metric scores and saves them in a `TSV` file which will be stored at [`./saved_results/main/results.tsv`](./saved_results/main/results.tsv).
 
+Furthermore to generate the results for *Exploring why the NT split does not show a consistent trend* in the baseline results [notebook](./analysis/TDSA_Baseline_Results.ipynb), run the following script, **however** the results from this script can be found at [`./saved_results/nt_subset_results.tsv`](./saved_results/nt_subset_results.tsv).
+``` bash
+python create_nt_error_subset_results.py ./saved_results/main/ ./saved_results/nt_subset_results.tsv
+```
+
 ### Baseline Results
 The following notebook shows the Baseline results
 
