@@ -46,7 +46,8 @@ if __name__ == '__main__':
                         f'{data_split}.json')
             test_collection = TargetTextCollection.load_json(data_fp)
             metric_df = overall_metric_results(test_collection, 
-                                            true_sentiment_key='target_sentiments')
+                                               true_sentiment_key='target_sentiments', 
+                                               strict_accuracy_metrics=True)
             prediction_keys = metric_df['prediction key'].unique().tolist() 
             metric_df = metric_df.reset_index().set_index(index_keys)
             
@@ -54,8 +55,8 @@ if __name__ == '__main__':
             subset_metric_df = error_split_df(train_collection, test_collection, 
                                               prediction_keys, 'target_sentiments', 
                                               ERROR_SPLIT_SUBSET_NAMES, 
-                                              sentiment_metrics.accuracy, 
-                                              assert_number_labels=3)
+                                              sentiment_metrics.accuracy,
+                                              metric_kwargs={'assert_number_labels': 3})
             subset_metric_df = subset_metric_df.reset_index().set_index(index_keys)
             # Combine the overall metrics with the subset metrics
             metric_df = pd.concat([metric_df, subset_metric_df], axis=1, sort=False)
