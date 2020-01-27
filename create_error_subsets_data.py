@@ -5,7 +5,9 @@ import pandas as pd
 from target_extraction.data_types import TargetTextCollection
 from target_extraction.analysis.util import overall_metric_results
 from target_extraction.analysis.sentiment_error_analysis import (ERROR_SPLIT_SUBSET_NAMES,
-                                                                 error_split_df)
+                                                                 error_split_df, 
+                                                                 reduce_collection_by_key_occurrence,
+                                                                 error_analysis_wrapper)
 from target_extraction.analysis import sentiment_metrics
 
 def parse_path(path_string: str) -> Path:
@@ -63,6 +65,22 @@ if __name__ == '__main__':
             metric_df = metric_df.reset_index()
             metric_df['Dataset'] = dataset_name.capitalize()
             metric_df['Data Split'] = formatted_data_split[data_split]
+            # Find the number of sentences in the DS1, D2 and D3 subsets combined
+            # and the number of sentences in the dataset overall and add them to 
+            # the DataFrame
+            ds_func = error_analysis_wrapper('DS')
+            ds_func(None, test_collection, True)
+            total_sentences = len(test_collection)
+            ds_1_sentences = len(reduce_collection_by_key_occurrence(test_collection, 
+                                                                     ['distinct_sentiment_1'], 
+                                                                     ['targets', 'spans']))
+            ds_23_sentences = len(reduce_collection_by_key_occurrence(test_collection, 
+                                                                      ['distinct_sentiment_2', 
+                                                                       'distinct_sentiment_3'], 
+                                                                      ['targets', 'spans']))
+            metric_df['Total Sentences'] = total_sentences
+            metric_df['DS 1 Sentences'] = ds_1_sentences
+            metric_df['DS 2 and 3 Sentences'] = ds_23_sentences
             all_dfs.append(metric_df)
             print(time.time() - one_time)
     print(f'total time {time.time() - overall_time}')
