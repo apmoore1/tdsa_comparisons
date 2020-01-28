@@ -176,13 +176,18 @@ Thus the following prediction key is for an `IAN` model that has been trained wi
 ### Generating the Metric results
 For all of the experiments apart from those between the two versions of the `CNN` models we generate the metric results into a `TSV` file so that they can be better analysed. To generate these metric results which include results for all of the Error splits and their associated subsets run the following script:
 ``` bash
-python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/results.tsv
+python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/results.tsv accuracy
 ```
 Which gathers all of the results from the all of the dataset results in `./saved_results/main/` and generates the metric scores and saves them in a `TSV` file which will be stored at [`./saved_results/main/results.tsv`](./saved_results/main/results.tsv).
 
 Furthermore to generate the results for *Exploring why the NT split does not show a consistent trend* in the baseline results [notebook](./analysis/TDSA_Baseline_Results.ipynb), run the following script, **however** the results from this script can be found at [`./saved_results/nt_subset_results.tsv`](./saved_results/nt_subset_results.tsv).
 ``` bash
 python create_nt_error_subset_results.py ./saved_results/main/ ./saved_results/nt_subset_results.tsv
+```
+
+Within the baseline results [notebook](./analysis/TDSA_Baseline_Results.ipynb) there is a section on describing the results on the *DS* subsets that contain Macro F1 score instead of the Accuracy scores from all of the other subset experiments. Thus to get the Macro F1 scores for the subsets this script was ran and the results can be found at [`./saved_results/main/macro_f1_results.tsv`](./saved_results/main/macro_f1_results.tsv)
+``` bash
+python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/macro_f1_results.tsv macro_f1
 ```
 
 ### Baseline Results

@@ -21,9 +21,12 @@ if __name__ == '__main__':
                         help='Directory that contain results for each dataset')
     parser.add_argument('save_fp', type=parse_path, 
                         help='File path to save the results too')
+    parser.add_argument('subset_metric', type=str, 
+                        help='Metric to be used on the error subsets')
     args = parser.parse_args()
     results_dir = args.results_dir
     save_fp = args.save_fp
+    subset_metric_func = getattr(sentiment_metrics, args.subset_metric)
     # Get the data
     data_splits = ['test', 'val']
     dataset_names = ['election', 'laptop', 'restaurant']
@@ -57,7 +60,7 @@ if __name__ == '__main__':
             subset_metric_df = error_split_df(train_collection, test_collection, 
                                               prediction_keys, 'target_sentiments', 
                                               ERROR_SPLIT_SUBSET_NAMES, 
-                                              sentiment_metrics.accuracy,
+                                              subset_metric_func,
                                               metric_kwargs={'assert_number_labels': 3})
             subset_metric_df = subset_metric_df.reset_index().set_index(index_keys)
             # Combine the overall metrics with the subset metrics
