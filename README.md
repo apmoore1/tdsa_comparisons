@@ -185,6 +185,11 @@ Furthermore to generate the results for *Exploring why the NT split does not sho
 python create_nt_error_subset_results.py ./saved_results/main/ ./saved_results/nt_subset_results.tsv
 ```
 
+Also to generate the results for testing out whether the position models improve when the number of targets increases in a sentence that is used in the following notebook run the following:
+``` bash
+python create_nt_error_subset_results_for_position.py ./saved_results/main/ ./saved_results/position_nt_subset_results.tsv
+```
+
 Within the baseline results [notebook](./analysis/TDSA_Baseline_Results.ipynb) there is a section on describing the results on the *DS* subsets that contain Macro F1 score instead of the Accuracy scores from all of the other subset experiments. Thus to get the Macro F1 scores for the subsets this script was ran and the results can be found at [`./saved_results/main/macro_f1_results.tsv`](./saved_results/main/macro_f1_results.tsv)
 ``` bash
 python create_error_subsets_data.py ./saved_results/main/ ./saved_results/main/macro_f1_results.tsv macro_f1
