@@ -1,3 +1,3 @@
--e git+git://github.com/apmoore1/target-extraction@master#egg=target-extraction
+-e git+git://github.com/apmoore1/target-extraction@v0.0.2#egg=target-extraction
 pylint
 pytest
