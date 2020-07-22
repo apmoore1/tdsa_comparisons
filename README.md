@@ -19,6 +19,11 @@ For all of the experiments the [840 billion token 300 dimension GloVe word vecto
 
 The CWR that are Transformer ELMo models are stored in the directory `./resources/CWR/`, of which each dataset has their own CWR due to [Rietzler et al. 2019](https://arxiv.org/abs/1908.11860) showing that domain specific CWR outperform non-domain specific CWR by a large margin.
 
+## Analysis of the datasets
+Before performing any of the experiments an analysis of the datasets is done looking at the different error splits that can be found within TDSA. The notebook exploring these splits can be found here, whereby it requires both uploading the original train and test data from the Restaurant and Laptop datasets (XML files), and uploading the train, validation, and test data created from the dataset splitting above (JSON files):
+
+[./analysis/TDSA_Error_Analysis.ipynb](./analysis/TDSA_Error_Analysis.ipynb)
+
 ## Experiments
 In all of the experiments we are going to use the following 3 TDSA models:
 1. [**TDLSTM**](https://www.aclweb.org/anthology/C16-1311.pdf)
