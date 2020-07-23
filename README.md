@@ -24,6 +24,17 @@ Before performing any of the experiments an analysis of the datasets is done loo
 
 [./analysis/TDSA_Error_Analysis.ipynb](./analysis/TDSA_Error_Analysis.ipynb)
 
+Lastly below the script generates the general dataset statistics that is shown in the table below:
+``` bash
+python general_dataset_stats.py 
+```
+
+| Dataset    | Train         | Validation    | Test          |   Total |
+|:-----------|:--------------|:--------------|:--------------|--------:|
+| Election   | 6811 (57.24%) | 2547 (21.41%) | 2541 (21.35%) |   11899 |
+| Laptop     | 1661 (56.29%) | 652 (22.09%)  | 638 (21.62%)  |    2951 |
+| Restaurant | 2490 (52.73%) | 1112 (23.55%) | 1120 (23.72%) |    4722 |
+
 ## Experiments
 In all of the experiments we are going to use the following 3 TDSA models:
 1. [**TDLSTM**](https://www.aclweb.org/anthology/C16-1311.pdf)
