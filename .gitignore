@@ -1,4 +1,5 @@
 .vscode
 data
 saved_models
-resources
+resources/embeddings
+resources/CWR
