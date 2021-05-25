@@ -1,6 +1,8 @@
 # TDSA Comparisons
 
-This code base explores how advancements in and outside of TDSA have improved TDSA models generally. At the moment we only focus on English datasets. 
+This code base explores how advancements in and outside of TDSA have improved TDSA models generally. At the moment we only focus on English datasets.
+
+Table that shows the results for various TDSA methods that use Contextualised Word Representation (CWR) (ELMo and BERT are CWR models) can be found at [Overview_of_TDSA_methods_that_use_CWR.csv](./Overview_of_TDSA_methods_that_use_CWR.csv), it compares them through various results on different datasets, whether then fine-tune the CWR model or not, if they add their own custom Neural Network layer, called here Task Specific Architecture (TSA), and if the CWR is pre-trained on some additional data (Pre-Trained). ASC = Aspect Sentiment Classification, AE = Aspect Extraction, ASAE = Joint task of Aspect Extraction and Aspect Sentiment classification. L = Laptop SemEval dataset, and R = Restaurant SemEval dataset.
 
 ## Datasets
 All of the data is stored in a private folder within `./data`. The datasets that we will use are the following:
@@ -15,9 +17,16 @@ Only the SemEval datasets need downloading into the `./data` folder, the Electio
 The Election, Laptop, and Restaurant dataset splits can be found in there respective folders: `./data/election_dataset`, `./data/laptop_dataset`, and `./data/restaurant_dataset`. Each of the targets in each text are ordered so that the first target that occurs in the sentence is also the first target within the TargetText object. This re-ordering is done so that methods that rely on this ordering can be used such as the model from [Hazarika et al. 2018](https://www.aclweb.org/anthology/N18-2043/) which encodes the aspect/target representation in sequential order using an LSTM.
 
 ## Word Embeddings
-For all of the experiments the [840 billion token 300 dimension GloVe word vectors](https://nlp.stanford.edu/projects/glove/) will be used, these word vectors are stored within the `resources` directory under `./resources/embeddings/glove.840B.300d.txt`. The only time these word vectors will not be used is during the Contextualised Word Representation (CWR) experiments where the CWR will be used instead.
+For all of the experiments the [840 billion token 300 dimension GloVe word vectors](https://nlp.stanford.edu/projects/glove/) will be used, these word vectors should be downloaded to the `resources` directory under `./resources/embeddings/glove.840B.300d.txt`. The only time these word vectors will not be used is during the Contextualised Word Representation (CWR) experiments where the CWR will be used instead.
 
-The CWR that are Transformer ELMo models are stored in the directory `./resources/CWR/`, of which each dataset has their own CWR due to [Rietzler et al. 2019](https://arxiv.org/abs/1908.11860) showing that domain specific CWR outperform non-domain specific CWR by a large margin.
+The CWR uses the Transformer ELMo architecture, they should be downloaded to the `./resources/CWR/` directory, of which each dataset has their own CWR due to [Rietzler et al. 2019](https://arxiv.org/abs/1908.11860) showing that domain specific CWR outperform non-domain specific CWR by a large margin. The three CWR models we use are the following, and can be found at the following URL [https://ucrel-web.lancs.ac.uk/moorea/research/phd_thesis/resources/CWR/](https://ucrel-web.lancs.ac.uk/moorea/research/phd_thesis/resources/CWR/), each named after the dataset:
+
+1. `restaurant_model.tar.gz`
+2. `laptop_model.tar.gz`
+3. `election_model.tar.gz`
+
+For details on how these CWR were fine tuned to the domain using a language modelling objective see the following [apmoore1/language-model GitHub repository.](https://github.com/apmoore1/language-model), for a summary of how they were created see the [CWR Model Zoo section](https://github.com/apmoore1/language-model/blob/master/README.md#cwr-model-zoo).
+
 
 ## Analysis of the datasets
 Before performing any of the experiments an analysis of the datasets is done looking at the different error splits that can be found within TDSA. The notebook exploring these splits can be found here, whereby it requires both uploading the original train and test data from the Restaurant and Laptop datasets (XML files), and uploading the train, validation, and test data created from the dataset splitting above (JSON files):
