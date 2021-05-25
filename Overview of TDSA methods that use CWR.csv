@@ -1,0 +1,12 @@
+Reference,External data,External data URL,Model,TSA,Pre-Trained,Multi Task,CWR Model,Year,Conference/Journal,ASC L,ASC R,AE L,AE R,AEAC L,AEAC R,ACSC R,Sentihood,Offical Code,Reimplementation code,Dependency tree,Model Position,Model others targets,Paper Link
+Xu et al.,No,No,BERT,No,"Yelp, Amazon, SquAD",No,BERT Base,2019,NAACL,78.07,84.95,84.26,77.97,No,No,No,No,https://github.com/howardhsu/BERT-for-RRC-ABSA,No,No,No,No,
+Sun et al.,No,No,BERT,No,Yes,No,BERT Base,2019,NAACL,No,No,No,No,No,No,89.9,Yes,https://github.com/HSLCY/ABSA-BERT-pair,No,No,No,No,
+Zeng et al.,No,No,LCF,Yes,Yes,No,BERT Base,2019,Applied Sciences,82.45,87.14,No,No,No,No,No,No,No,https://github.com/songyouwei/ABSA-PyTorch/blob/master/models/lcf_bert.py,No,Yes through archtecture,No,
+Huang and Carley,No,No,GAT,Yes,No,No,BERT Large,2019,EMNLP,80.1,83,No,No,No,No,No,No,No,No,Yes,Yes through dependencies,No,
+Rietzler et al.,No,No,BERT,No,"Yelp, Amazon",No,BERT Base,2019,arxiv,80.23,87.89,No,No,No,No,No,No,https://github.com/deepopinion/domain-adapted-atsc,No,No,No,No,
+Li et al.,No,No,BERT,No,Yes,No,BERT Base,2019,NUT workshop,No,No,No,No,61.12,74.72,No,No,https://github.com/lixin4ever/BERT-E2E-ABSA,No,No,No,No,https://arxiv.org/abs/1910.00883
+Hu et al.,No,No,BERT/Span,Yes,Yes,No,BERT Large,2019,ACL,81.39,No,85.2,No,68.06,74.92,No,No,https://github.com/huminghao16/SpanABSA,No,No,No,No,https://www.aclweb.org/anthology/P19-1051.pdf
+Zhao et al.,No,No,SDGCN,Yes,No,No,BERT Base,2019,arxiv,81.35,83.57,No,No,No,No,No,No,https://github.com/Pinlong-Zhao/SDGCN,No,No,Yes linear weighting with cut off,Yes GCN,https://arxiv.org/abs/1906.04501
+Song et al.,No,No,AEN,Yes,Yes,No,BERT Base,2019,arxiv,74.71,83.12,No,No,No,No,No,No,https://github.com/songyouwei/ABSA-PyTorch/blob/master/models/aen.py,No,No,No,No,https://arxiv.org/pdf/1902.09314.pdf
+,,,,,,,,,,,,,,,,,,https://github.com/MatanBN/XRTransfer,No,,,,
+Jiang et al.,No,No,CapsNet,Yes,Yes,No,BERT Base,2019,EMNLP,No,85.93,No,No,No,No,91.38,No,https://github.com/siat-nlp/MAMS-for-ABSA,No,No,No,No,https://www.aclweb.org/anthology/D19-1654.pdf
